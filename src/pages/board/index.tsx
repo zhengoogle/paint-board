@@ -62,13 +62,24 @@ const Board: React.FC = () => {
 
   // 监听鼠标事件
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false)
-  const mouseDown = (event: MouseEvent) => {
+  const mouseDown = (event: any) => {
     if (board) {
-      const { clientX: x, clientY: y } = event
       const position = {
-        x,
-        y
+        x: 0,
+        y: 0
       }
+      if (event.touches) {
+        position.x = event.touches[0].clientX * 1
+        position.y = event.touches[0].clientY * 1
+      } else {
+        position.x = event.clientX
+        position.y = event.clientY
+      }
+      // const { clientX: x, clientY: y } = event
+      // const position = {
+      //   x,
+      //   y
+      // }
       // 如果有文本编辑框，取消编辑
       if (textEdit) {
         board.addTextElement(textEdit.value, textEdit.rect)
@@ -101,9 +112,18 @@ const Board: React.FC = () => {
       textEdit.showTextInput(position)
     }
   }
-  const mouseMove = (event: MouseEvent) => {
+  const mouseMove = (event: any) => {
     if (board) {
-      const { clientX: x, clientY: y } = event
+      let x = 0
+      let y = 0
+      if (event.touches) {
+        x = event.touches[0].clientX * 1
+        y = event.touches[0].clientY * 1
+      } else {
+        x = event.clientX
+        y = event.clientY
+      }
+      // const { clientX: x, clientY: y } = event
       if (isPressSpace && isMouseDown) {
         board.dragCanvas({
           x,
@@ -151,6 +171,9 @@ const Board: React.FC = () => {
         onMouseDown={mouseDown}
         onMouseMove={mouseMove}
         onMouseUp={mouseUp}
+        onTouchStart={mouseDown}
+        onTouchMove={mouseMove}
+        onTouchEnd={mouseUp}
         onDoubleClick={dbClick}
       ></canvas>
       <Info />

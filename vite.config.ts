@@ -9,6 +9,9 @@ import autoprefixer from 'autoprefixer'
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
+  server: {
+    host: '0.0.0.0'
+  },
   plugins: [
     react(),
     viteEslint({
